@@ -17,6 +17,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profile: payload,
+        loading: false,
       };
     case PROFILE_ERROR:
       return {
