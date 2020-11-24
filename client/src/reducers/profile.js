@@ -31,13 +31,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         profiles: payload,
-        loading: true,
+        loading: false,
       };
     case GET_REPOS:
       return {
         ...state,
         repos: payload,
-        loading: true,
+        loading: false,
       };
     case PROFILE_ERROR:
       return {
