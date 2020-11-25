@@ -1,4 +1,5 @@
 import {
+  ADD_POST,
   DELETE_POST,
   GET_POSTS,
   GET_PROFILE,
@@ -24,12 +25,13 @@ export default function (state = initialState, action) {
         posts: payload,
         loading: false,
       };
-    case POST_ERROR:
+    case ADD_POST: {
       return {
         ...state,
-        error: payload,
+        posts: [payload, ...state.posts],
         loading: false,
       };
+    }
     case UPDATE_LIKES:
       return {
         ...state,
@@ -42,6 +44,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         posts: state.posts.filter((post) => post._id !== payload),
+        loading: false,
+      };
+    case POST_ERROR:
+      return {
+        ...state,
+        error: payload,
         loading: false,
       };
     default:
