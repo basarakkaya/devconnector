@@ -8,6 +8,7 @@ const EditProfile = ({
   createProfile,
   getCurrentProfile,
   history,
+  auth: { isAuthenticated },
   profile: { profile, loading },
 }) => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const EditProfile = ({
   });
 
   useEffect(() => {
-    if (loading) getCurrentProfile();
+    if (isAuthenticated && loading) getCurrentProfile();
     else
       setFormData({
         company: loading || !profile.company ? '' : profile.company,
@@ -43,7 +44,7 @@ const EditProfile = ({
         youtube: loading || !profile.social ? '' : profile.social.youtube,
         instagram: loading || !profile.social ? '' : profile.social.instagram,
       });
-  }, [loading, getCurrentProfile, profile]);
+  }, [isAuthenticated, loading, getCurrentProfile, profile]);
 
   const [displaySocialInputs, toggleSocialInputs] = useState(false);
 
@@ -249,10 +250,12 @@ const EditProfile = ({
 EditProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
   getCurrentProfile: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   profile: state.profile,
 });
 
