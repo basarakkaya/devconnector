@@ -1,6 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://bakkaya:b112358132134b@devconnector.sj3r6.mongodb.net/devconnector?retryWrites=true&w=majority",
-  "jwtSecret": "mySecretToken",
-  "githubClientId": "4007fe56629918d590d3",
-  "githubSecret": "07df63184ee1b5c1a25669c7b1d5124f2f5a8010"
-}
