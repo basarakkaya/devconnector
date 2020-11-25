@@ -12,6 +12,10 @@ import {
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
 
+/**
+ * @ReduxAction
+ * @description Sets the authenticated user state
+ */
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -31,6 +35,15 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
+/**
+ * @ReduxAction
+ * @description Logs in the user if the credentials are correct.
+ * Dispatches `loadUser` after logging in.
+ * @param {{
+ *  email: String,
+ *  password: String
+ * }}  formData Gets `email` and `password` in an object
+ */
 export const login = ({ email, password }) => async (dispatch) => {
   const config = {
     headers: {
@@ -62,6 +75,16 @@ export const login = ({ email, password }) => async (dispatch) => {
   }
 };
 
+/**
+ * @ReduxAction
+ * @description Creates a new user in DB with given credentials.
+ * Dispatches `loadUser` after logging in.
+ * @param {{
+ *  name: String,
+ *  email: String,
+ *  password: String
+ * }} formData Gets `name`, `email` and `password` in an object
+ */
 export const register = ({ name, email, password }) => async (dispatch) => {
   const config = {
     headers: {
@@ -93,6 +116,10 @@ export const register = ({ name, email, password }) => async (dispatch) => {
   }
 };
 
+/**
+ * @ReduxAction
+ * @description Logs out the user. Clears the profile state and token stored in localStorage.
+ */
 export const logout = () => (dispatch) => {
   dispatch({ type: CLEAR_PROFILE });
   dispatch({ type: LOGOUT });

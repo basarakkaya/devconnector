@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const config = require('config');
 const db = config.get('mongoURI');
 
+/**
+ * @description Creates DB Connection with given credentials & configs
+ */
 const connectDB = async () => {
   try {
     console.log('Waiting for MongoDB Connection...');
