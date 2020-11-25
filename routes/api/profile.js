@@ -4,6 +4,7 @@ const config = require('config');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
+const logger = require('../../util/logger');
 
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
@@ -15,18 +16,34 @@ const User = require('../../models/User');
  * @access      Private
  */
 router.get('/me', auth, async (req, res) => {
+  logger.http('Service called', {
+    service: `GET api/profile/me`,
+    user: req.user.id,
+  });
+
   try {
     const profile = await Profile.findOne({
       user: req.user.id,
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
+      logger.error('There is no profile for this user', {
+        service: `GET api/profile/me`,
+        user: req.user.id,
+      });
       return res.status(400).json({ msg: 'There is no profile for this user' });
     }
 
+    logger.info('Request successful', {
+      service: `GET api/profile/me`,
+      user: req.user.id,
+    });
     res.json(profile);
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `GET api/profile/me`,
+      user: req.user.id,
+    });
     res.status(500).send('Server Error');
   }
 });
@@ -46,9 +63,18 @@ router.post(
     ],
   ],
   async (req, res) => {
+    logger.http('Service called', {
+      service: `POST api/profile`,
+      user: req.user.id,
+    });
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+      logger.error('Validation error', {
+        service: 'POST api/profile',
+        user: req.user.id,
+      });
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -101,6 +127,10 @@ router.post(
           { new: true }
         );
 
+        logger.info('Request successful', {
+          service: 'POST api/profile',
+          user: req.user.id,
+        });
         return res.json(profile);
       }
 
@@ -109,9 +139,16 @@ router.post(
 
       await profile.save();
 
+      logger.info('Request successful', {
+        service: 'POST api/profile',
+        user: req.user.id,
+      });
       res.json(profile);
     } catch (err) {
-      console.error(err.message);
+      logger.error(err.message, {
+        service: 'POST api/profile',
+        user: req.user.id,
+      });
       res.status(500).send('Server Error');
     }
   }
@@ -123,11 +160,19 @@ router.post(
  * @access      Public
  */
 router.get('/', async (req, res) => {
+  logger.http('Service called', {
+    service: `GET api/profile`,
+  });
+
   try {
     const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+
+    logger.info('Request successful', {
+      service: 'GET api/profile',
+    });
     res.json(profiles);
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, { service: 'GET api/profile' });
     res.status(500).send('Server Error');
   }
 });
@@ -138,21 +183,37 @@ router.get('/', async (req, res) => {
  * @access      Public
  */
 router.get('/user/:user_id', async (req, res) => {
+  logger.http('Service called', {
+    service: `GET api/profile/user/${req.params.user_id}`,
+  });
+
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id,
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) {
+      logger.error('There is no profile for this user', {
+        service: `GET api/profile/user/${req.params.user_id}`,
+      });
       return res.status(400).json({ msg: 'There is no profile for this user' });
     }
 
+    logger.info('Request successful', {
+      service: `GET api/profile/user/${req.params.user_id}`,
+    });
     res.json(profile);
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `GET api/profile/user/${req.params.user_id}`,
+    });
 
-    if (err.kind == 'ObjectId')
+    if (err.kind == 'ObjectId') {
+      logger.error('There is no profile for this user', {
+        service: `GET api/profile/user/${req.params.user_id}`,
+      });
       return res.status(400).json({ msg: 'There is no profile for this user' });
+    }
 
     res.status(500).send('Server Error');
   }
@@ -164,6 +225,11 @@ router.get('/user/:user_id', async (req, res) => {
  * @access      Private
  */
 router.delete('/', auth, async (req, res) => {
+  logger.http('Service called', {
+    service: `DELETE api/profile`,
+    user: req.user.id,
+  });
+
   try {
     // Remove user's posts
     await Post.deleteMany({ user: req.user.id });
@@ -174,9 +240,16 @@ router.delete('/', auth, async (req, res) => {
     // Remove Profile
     await User.findOneAndRemove({ _id: req.user.id });
 
+    logger.info('Request successful', {
+      service: `DELETE api/profile`,
+      user: req.user.id,
+    });
     res.json({ msg: 'User deleted' });
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `DELETE api/profile`,
+      user: req.user.id,
+    });
     res.status(500).send('Server Error');
   }
 });
@@ -197,9 +270,18 @@ router.put(
     ],
   ],
   async (req, res) => {
+    logger.http('Service called', {
+      service: `PUT api/profile/experience`,
+      user: req.user.id,
+    });
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+      logger.error('Validation error', {
+        service: `PUT api/profile/experience`,
+        user: req.user.id,
+      });
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -230,9 +312,16 @@ router.put(
 
       await profile.save();
 
+      logger.info('Request successful', {
+        service: `PUT api/profile/experience`,
+        user: req.user.id,
+      });
       res.json(profile);
     } catch (err) {
-      console.error(err.message);
+      logger.error(err.message, {
+        service: `PUT api/profile/experience`,
+        user: req.user.id,
+      });
       res.status(500).send('Server Error');
     }
   }
@@ -244,6 +333,11 @@ router.put(
  * @access      Private
  */
 router.delete('/experience/:exp_id', auth, async (req, res) => {
+  logger.http('Service called', {
+    service: `DELETE api/profile/experience/${req.params.exp_id}`,
+    user: req.user.id,
+  });
+
   try {
     const profile = await Profile.findOne({ user: req.user.id });
 
@@ -255,9 +349,17 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
     profile.experience.splice(removeIndex, 1);
 
     await profile.save();
+
+    logger.info('Request successful', {
+      service: `DELETE api/profile/experience/${req.params.exp_id}`,
+      user: req.user.id,
+    });
     res.json(profile);
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `DELETE api/profile/experience/${req.params.exp_id}`,
+      user: req.user.id,
+    });
     res.status(500).send('Server Error');
   }
 });
@@ -279,9 +381,18 @@ router.put(
     ],
   ],
   async (req, res) => {
+    logger.http('Service called', {
+      service: `PUT api/profile/education`,
+      user: req.user.id,
+    });
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+      logger.error('Validation error', {
+        service: `PUT api/profile/education`,
+        user: req.user.id,
+      });
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -312,9 +423,16 @@ router.put(
 
       await profile.save();
 
+      logger.info('Request successful', {
+        service: `PUT api/profile/education`,
+        user: req.user.id,
+      });
       res.json(profile);
     } catch (err) {
-      console.error(err.message);
+      logger.error(err.message, {
+        service: `PUT api/profile/education`,
+        user: req.user.id,
+      });
       res.status(500).send('Server Error');
     }
   }
@@ -326,6 +444,11 @@ router.put(
  * @access      Private
  */
 router.delete('/education/:edu_id', auth, async (req, res) => {
+  logger.http('Service called', {
+    service: `DELETE api/profile/education/${req.params.edu_id}`,
+    user: req.user.id,
+  });
+
   try {
     const profile = await Profile.findOne({ user: req.user.id });
 
@@ -337,9 +460,17 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     profile.education.splice(removeIndex, 1);
 
     await profile.save();
+
+    logger.info('Request successful', {
+      service: `DELETE api/profile/education/${req.params.edu_id}`,
+      user: req.user.id,
+    });
     res.json(profile);
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `DELETE api/profile/education/${req.params.edu_id}`,
+      user: req.user.id,
+    });
     res.status(500).send('Server Error');
   }
 });
@@ -350,6 +481,10 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
  * @access      Public
  */
 router.get('/github/:username', async (req, res) => {
+  logger.http('Service called', {
+    service: `GET api/profile/github/${req.params.username}`,
+  });
+
   try {
     const options = {
       uri: `https://api.github.com/users/${
@@ -362,16 +497,27 @@ router.get('/github/:username', async (req, res) => {
     };
 
     request(options, (error, response, body) => {
-      if (error) console.error(error);
+      if (error)
+        logger.error(error, {
+          service: `GET api/profile/github/${req.params.username}`,
+        });
 
       if (response.statusCode !== 200) {
+        logger.error('No Github profile found', {
+          service: `GET api/profile/github/${req.params.username}`,
+        });
         return res.status(404).json({ msg: 'No Github profile found' });
       }
 
+      logger.info('Request successful', {
+        service: `GET api/profile/github/${req.params.username}`,
+      });
       res.json(JSON.parse(body));
     });
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message, {
+      service: `GET api/profile/github/${req.params.username}`,
+    });
     res.status(500).send('Server Error');
   }
 });

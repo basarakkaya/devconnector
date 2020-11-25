@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const logger = require('../util/logger');
 
 module.exports = function (req, res, next) {
   // Get token from header
@@ -7,6 +8,7 @@ module.exports = function (req, res, next) {
 
   // Check if no token
   if (!token) {
+    logger.warn('No token, authorization denied', { middleware: 'auth' });
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
 
@@ -17,6 +19,7 @@ module.exports = function (req, res, next) {
     req.user = decoded.user;
     next();
   } catch (err) {
+    logger.error('Token is not valid', { middleware: 'auth' });
     res.status(401).json({ msg: 'Token is not valid' });
   }
 };

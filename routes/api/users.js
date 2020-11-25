@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const logger = require('../../util/logger');
 
 const User = require('../../models/User');
 
@@ -24,9 +25,14 @@ router.post(
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
+    logger.http('Service called', {
+      service: `POST api/users`,
+    });
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+      logger.error('Validation error', { service: 'POST api/users' });
       return res.status(400).json({ errors: errors.array() });
     }
 
@@ -37,6 +43,7 @@ router.post(
 
       // See if user exists
       if (user) {
+        logger.error('User already exists', { service: 'POST api/users' });
         return res
           .status(400)
           .json({ errors: [{ msg: 'User already exists' }] });
@@ -75,14 +82,17 @@ router.post(
         config.get('jwtSecret'),
         { expiresIn: 360000 },
         (err, token) => {
-          if (err) throw err;
+          if (err) {
+            logger.error(err, { service: 'POST api/users' });
+            throw err;
+          }
+
+          logger.info('Request successful', { service: 'POST api/users' });
           res.json({ token });
         }
       );
-
-      // res.send('User registered');
     } catch (err) {
-      console.error(err.message);
+      logger.error(err.message, { service: 'POST api/users' });
       res.status(500).send('Server error');
     }
   }

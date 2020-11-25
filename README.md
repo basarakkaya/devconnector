@@ -30,5 +30,5 @@ _To create GitHub API Credentials, visit [GitHub Developer Settings > OAuth Apps
 - [ ] Verify user with mail
 - [ ] Forgot password - Reset password functionality
 - [ ] Write tests
-- [ ] Add server logs
+- [x] ~Add server logs~ _(completed - Nov 25, 2020)_
 - [x] ~Update JsDocs~ _(completed - Nov 25, 2020)_
