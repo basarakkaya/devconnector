@@ -10,14 +10,14 @@ import Experience from './Experience';
 import Education from './Education';
 
 const Dashboard = ({
-  auth: { user },
+  auth: { user, isAuthenticated },
   deleteAccount,
   getCurrentProfile,
   profile: { profile, loading },
 }) => {
   useEffect(() => {
-    getCurrentProfile();
-  }, [getCurrentProfile]);
+    if (isAuthenticated) getCurrentProfile();
+  }, [isAuthenticated, getCurrentProfile]);
 
   return loading && profile === null ? (
     <Spinner />

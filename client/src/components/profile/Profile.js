@@ -19,8 +19,8 @@ const Profile = ({
   match,
 }) => {
   useEffect(() => {
-    getProfileById(match.params.id);
-  }, [getProfileById, match]);
+    if (auth.isAuthenticated) getProfileById(match.params.id);
+  }, [auth.isAuthenticated, getProfileById, match]);
 
   return (
     <Fragment>

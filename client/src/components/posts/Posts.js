@@ -8,10 +8,14 @@ import PostForm from './PostForm';
 
 import { getPosts } from '../../actions/post';
 
-const Posts = ({ post: { posts, loading }, getPosts }) => {
+const Posts = ({
+  auth: { isAuthenticated },
+  post: { posts, loading },
+  getPosts,
+}) => {
   useEffect(() => {
-    getPosts();
-  }, [getPosts]);
+    if (isAuthenticated) getPosts();
+  }, [isAuthenticated, getPosts]);
 
   return loading ? (
     <Spinner />
@@ -33,10 +37,12 @@ const Posts = ({ post: { posts, loading }, getPosts }) => {
 
 Posts.propTypes = {
   getPosts: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   post: state.post,
 });
 

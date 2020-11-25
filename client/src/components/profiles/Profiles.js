@@ -6,10 +6,10 @@ import ProfileItem from './ProfileItem';
 import Spinner from '../layout/Spinner';
 import { getProfiles } from '../../actions/profile';
 
-const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
+const Profiles = ({ auth, getProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
-    getProfiles();
-  }, [getProfiles]);
+    if (auth.isAuthenticated) getProfiles();
+  }, [auth.isAuthenticated, getProfiles]);
 
   return (
     <Fragment>
@@ -39,10 +39,12 @@ const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
 
 Profiles.propTypes = {
   getProfiles: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
   profile: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   profile: state.profile,
 });
 

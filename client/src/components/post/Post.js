@@ -10,10 +10,15 @@ import { getPost } from '../../actions/post';
 import CommentForm from './CommentForm';
 import CommentItem from './CommentItem';
 
-const Post = ({ post: { post, loading }, match, getPost }) => {
+const Post = ({
+  auth: { isAuthenticated },
+  post: { post, loading },
+  match,
+  getPost,
+}) => {
   useEffect(() => {
-    getPost(match.params.id);
-  }, [getPost, match]);
+    if (isAuthenticated) getPost(match.params.id);
+  }, [isAuthenticated, getPost, match]);
 
   return loading || post === null ? (
     <Spinner />
@@ -36,11 +41,13 @@ const Post = ({ post: { post, loading }, match, getPost }) => {
 };
 
 Post.propTypes = {
+  auth: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
   getPost: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   post: state.post,
 });
 
