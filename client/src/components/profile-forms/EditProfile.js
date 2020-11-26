@@ -2,7 +2,30 @@ import React, { Fragment, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import {
+  Paper,
+  TextField,
+  Button,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import { createProfile, getCurrentProfile } from '../../actions/profile';
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+  submit: {
+    marginTop: 16,
+  },
+}));
 
 const EditProfile = ({
   createProfile,
@@ -11,6 +34,8 @@ const EditProfile = ({
   auth: { isAuthenticated },
   profile: { profile, loading },
 }) => {
+  const classes = useStyles();
+
   const [formData, setFormData] = useState({
     company: '',
     website: '',
@@ -74,175 +99,223 @@ const EditProfile = ({
 
   return (
     <Fragment>
-      <h1 className='large text-primary'>Create Your Profile</h1>
-      <p className='lead'>
-        <i className='fas fa-user'></i> Let's get some information to make your
-        profile stand out
-      </p>
-      <small>* = required field</small>
-      <form className='form' onSubmit={onSubmit}>
-        <div className='form-group'>
-          <select name='status' value={status} onChange={onChange}>
-            <option value='0'>* Select Professional Status</option>
-            <option value='Developer'>Developer</option>
-            <option value='Junior Developer'>Junior Developer</option>
-            <option value='Senior Developer'>Senior Developer</option>
-            <option value='Manager'>Manager</option>
-            <option value='Student or Learning'>Student or Learning</option>
-            <option value='Instructor'>Instructor or Teacher</option>
-            <option value='Intern'>Intern</option>
-            <option value='Other'>Other</option>
-          </select>
-          <small className='form-text'>
-            Give us an idea of where you are at in your career
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+      <h1 className='large text-primary'>Edit Your Profile</h1>
+      <Paper className={classes.paper} elevation={3}>
+        <p className='lead'>
+          <i className='fas fa-user'></i> Let's get some information to make
+          your profile stand out
+        </p>
+        <small>* = required field</small>
+        <form onSubmit={onSubmit}>
+          <TextField
+            margin='normal'
+            select
+            label='Select Professional Status'
+            name='status'
+            value={status}
+            onChange={onChange}
+            helperText='Give us an idea of where you are at in your career'
+            variant='outlined'
+            fullWidth
+            required
+          >
+            <MenuItem value={0}>* </MenuItem>
+            <MenuItem value='Developer'>Developer</MenuItem>
+            <MenuItem value='Junior Developer'>Junior Developer</MenuItem>
+            <MenuItem value='Senior Developer'>Senior Developer</MenuItem>
+            <MenuItem value='Manager'>Manager</MenuItem>
+            <MenuItem value='Student or Learning'>Student or Learning</MenuItem>
+            <MenuItem value='Instructor'>Instructor or Teacher</MenuItem>
+            <MenuItem value='Intern'>Intern</MenuItem>
+            <MenuItem value='Other'>Other</MenuItem>
+          </TextField>
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Company'
+            label='Company'
             name='company'
             onChange={onChange}
             value={company}
+            helperText='Could be your own company or one you work for'
+            fullWidth
           />
-          <small className='form-text'>
-            Could be your own company or one you work for
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Website'
+            label='Website'
             name='website'
             onChange={onChange}
             value={website}
+            helperText='Could be your own or a company website'
+            fullWidth
           />
-          <small className='form-text'>
-            Could be your own or a company website
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Location'
+            label='Location'
             name='location'
             onChange={onChange}
             value={location}
+            helperText='City & state suggested (eg. Boston, MA)'
+            fullWidth
           />
-          <small className='form-text'>
-            City & state suggested (eg. Boston, MA)
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='* Skills'
+            label='* Skills'
             name='skills'
             onChange={onChange}
             value={skills}
+            helperText='Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)'
+            fullWidth
           />
-          <small className='form-text'>
-            Please use comma separated values (eg. HTML,CSS,JavaScript,PHP)
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Github Username'
+            label='Github Username'
             name='githubusername'
             onChange={onChange}
             value={githubusername}
+            helperText='If you want your latest repos and a Github link, include your username'
+            fullWidth
           />
-          <small className='form-text'>
-            If you want your latest repos and a Github link, include your
-            username
-          </small>
-        </div>
-        <div className='form-group'>
-          <textarea
-            placeholder='A short bio of yourself'
+          <TextField
+            margin='normal'
+            variant='outlined'
+            label='A short bio of yourself'
             name='bio'
             onChange={onChange}
             value={bio}
-          ></textarea>
-          <small className='form-text'>Tell us a little about yourself</small>
-        </div>
-
-        <div className='my-2'>
-          <button
+            rows={1}
+            rowsMax={3}
+            helperText='Tell us a little about yourself'
+            fullWidth
+            multiline
+          ></TextField>
+          <Button
             type='button'
-            className='btn btn-light'
+            color='primary'
             onClick={() => toggleSocialInputs(!displaySocialInputs)}
           >
             Add Social Network Links
-          </button>
+          </Button>
           <span>Optional</span>
-        </div>
-
-        {displaySocialInputs && (
-          <Fragment>
-            <div className='form-group social-input'>
-              <i className='fab fa-twitter fa-2x'></i>
-              <input
+          {displaySocialInputs && (
+            <Fragment>
+              <TextField
+                margin='normal'
+                variant='outlined'
                 type='text'
-                placeholder='Twitter URL'
+                label='Twitter URL'
                 name='twitter'
                 onChange={onChange}
                 value={twitter}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment>
+                      <i className='fab fa-twitter  '></i>{' '}
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
               />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-facebook fa-2x'></i>
-              <input
+              <TextField
+                margin='normal'
+                variant='outlined'
                 type='text'
-                placeholder='Facebook URL'
+                label='Facebook URL'
                 name='facebook'
                 onChange={onChange}
                 value={facebook}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment>
+                      <i className='fab fa-facebook  '></i>{' '}
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
               />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-youtube fa-2x'></i>
-              <input
+              <TextField
+                margin='normal'
+                variant='outlined'
                 type='text'
-                placeholder='YouTube URL'
+                label='YouTube URL'
                 name='youtube'
                 onChange={onChange}
                 value={youtube}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment>
+                      <i className='fab fa-youtube  '></i>{' '}
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
               />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-linkedin fa-2x'></i>
-              <input
+              <TextField
+                margin='normal'
+                variant='outlined'
                 type='text'
-                placeholder='Linkedin URL'
+                label='Linkedin URL'
                 name='linkedin'
                 onChange={onChange}
                 value={linkedin}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment>
+                      <i className='fab fa-linkedin  '></i>{' '}
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
               />
-            </div>
-
-            <div className='form-group social-input'>
-              <i className='fab fa-instagram fa-2x'></i>
-              <input
+              <TextField
+                margin='normal'
+                variant='outlined'
                 type='text'
-                placeholder='Instagram URL'
+                label='Instagram URL'
                 name='instagram'
                 onChange={onChange}
                 value={instagram}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment>
+                      <i className='fab fa-instagram  '></i>{' '}
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
               />
-            </div>
-          </Fragment>
-        )}
-
-        <input type='submit' className='btn btn-primary my-1' />
-        <Link className='btn btn-light my-1' to='/dashboard'>
-          Go Back
-        </Link>
-      </form>
+            </Fragment>
+          )}
+          <Button
+            type='submit'
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            fullWidth
+          >
+            Submit
+          </Button>
+          <Link to='/dashboard'>
+            <Button
+              type='submit'
+              variant='outlined'
+              color='primary'
+              className={classes.submit}
+              fullWidth
+            >
+              Go Back
+            </Button>
+          </Link>
+        </form>
+      </Paper>
     </Fragment>
   );
 };

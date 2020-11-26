@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { TextField, Button } from '@material-ui/core';
+
 import { addComment } from '../../actions/post';
 
 const CommentForm = ({ postId, addComment }) => {
@@ -8,27 +10,29 @@ const CommentForm = ({ postId, addComment }) => {
 
   return (
     <div className='post-form'>
-      <div className='bg-primary p'>
-        <h3>Leave A Comment</h3>
-      </div>
       <form
-        className='form my-1'
         onSubmit={(e) => {
           e.preventDefault();
           addComment(postId, { text });
           setText('');
         }}
       >
-        <textarea
+        <TextField
+          variant='outlined'
+          margin='normal'
           name='text'
-          cols='30'
-          rows='5'
-          placeholder='Comment on this post'
+          rows={3}
+          maxRows={5}
+          label='Comment on this post'
           value={text}
           onChange={(e) => setText(e.target.value)}
+          multiline
+          fullWidth
           required
-        ></textarea>
-        <input type='submit' className='btn btn-dark my-1' value='Submit' />
+        ></TextField>
+        <Button type='submit' variant='contained' color='primary'>
+          Submit
+        </Button>
       </form>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { TextField, Button } from '@material-ui/core';
 
 import { addPost } from '../../actions/post';
 
@@ -9,27 +10,29 @@ const PostForm = ({ addPost }) => {
 
   return (
     <div className='post-form'>
-      <div className='bg-primary p'>
-        <h3>Say Something...</h3>
-      </div>
       <form
-        className='form my-1'
         onSubmit={(e) => {
           e.preventDefault();
           addPost({ text });
           setText('');
         }}
       >
-        <textarea
+        <TextField
+          margin='normal'
+          variant='outlined'
           name='text'
-          cols='30'
-          rows='5'
-          placeholder='Create a post'
-          required
+          rows={3}
+          rowsMax={5}
+          label='Create a post'
           value={text}
           onChange={(e) => setText(e.target.value)}
-        ></textarea>
-        <input type='submit' className='btn btn-dark my-1' value='Submit' />
+          fullWidth
+          multiline
+          required
+        ></TextField>
+        <Button type='submit' variant='contained' color='primary'>
+          Submit
+        </Button>
       </form>
     </div>
   );

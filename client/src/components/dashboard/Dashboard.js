@@ -2,6 +2,8 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Paper, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentProfile, deleteAccount } from '../../actions/profile';
 
 import Spinner from '../layout/Spinner';
@@ -9,35 +11,52 @@ import DashboardActions from './DashboardActions';
 import Experience from './Experience';
 import Education from './Education';
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+}));
+
 const Dashboard = ({
   auth: { user, isAuthenticated },
   deleteAccount,
   getCurrentProfile,
   profile: { profile, loading },
 }) => {
+  const classes = useStyles();
+
   useEffect(() => {
-    if (isAuthenticated) getCurrentProfile();
-  }, [isAuthenticated, getCurrentProfile]);
+    if (isAuthenticated && user) getCurrentProfile();
+  }, [isAuthenticated, user, getCurrentProfile]);
 
   return loading && profile === null ? (
     <Spinner />
   ) : (
     <Fragment>
       <h1 className='large text-primary'>Dashboard</h1>
-      <p className='lead'>
-        <i className='fas fa-user'></i> Welcome {user && user.name}
-      </p>
+      <Paper className={classes.paper} elevation={3}>
+        <p className='lead'>
+          <i className='fas fa-user'></i> Welcome {user && user.name}
+        </p>
+        {profile !== null && <DashboardActions />}
+      </Paper>
       {profile !== null ? (
         <Fragment>
-          <DashboardActions />
-          <Experience experience={profile.experience} />
-          <Education education={profile.education} />
-          <div className='my-2'>
-            <button className='btn btn-danger' onClick={deleteAccount}>
-              <i className='fas fa-user-minus'></i>
-              Delete My Account
-            </button>
-          </div>
+          <Paper className={classes.paper} elevation={3}>
+            <Experience experience={profile.experience} />
+          </Paper>
+          <Paper className={classes.paper} elevation={3}>
+            <Education education={profile.education} />
+          </Paper>
+          <Button
+            variant='outlined'
+            color='secondary'
+            onClick={deleteAccount}
+            startIcon={<i className='fas fa-user-minus'></i>}
+          >
+            Delete My Account
+          </Button>
         </Fragment>
       ) : (
         <Fragment>

@@ -1,12 +1,30 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  CardActions,
+  Badge,
+  Icon,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import Spinner from '../layout/Spinner';
 
 import { getGithubRepos } from '../../actions/profile';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '8px 0px',
+  },
+}));
+
 const ProfileGithub = ({ username, repos, getGithubRepos }) => {
+  const classes = useStyles();
+
   useEffect(() => {
     getGithubRepos(username);
   }, [getGithubRepos, username]);
@@ -20,9 +38,9 @@ const ProfileGithub = ({ username, repos, getGithubRepos }) => {
         <Spinner />
       ) : (
         repos.map((repo) => (
-          <div className='repo bg-white p-1 my-1' key={repo._id}>
-            <div>
-              <h4>
+          <Card className={classes.root} key={repo._id} elevation={3}>
+            <CardHeader
+              title={
                 <a
                   href={repo.html_url}
                   target='_blank'
@@ -30,21 +48,33 @@ const ProfileGithub = ({ username, repos, getGithubRepos }) => {
                 >
                   {repo.name}
                 </a>
-              </h4>
-              <p>{repo.description}</p>
-            </div>
-            <div>
-              <ul>
-                <li className='badge badge-primary'>
-                  Stars: {repo.stargazers_count}
-                </li>
-                <li className='badge badge-dark'>
-                  Watchers: {repo.watchers_count}
-                </li>
-                <li className='badge badge-light'>Forks: {repo.forks_count}</li>
-              </ul>
-            </div>
-          </div>
+              }
+            />
+            <CardContent>
+              <Typography variant='body1' color='textPrimary' component='p'>
+                {repo.description}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Badge
+                badgeContent={repo.stargazers_count}
+                color='primary'
+                showZero
+              >
+                <Icon className='fas fa-star'></Icon>
+              </Badge>
+              <Badge
+                badgeContent={repo.watchers_count}
+                color='primary'
+                showZero
+              >
+                <Icon className='fas fa-code-branch'></Icon>
+              </Badge>
+              <Badge badgeContent={repo.forks_count} color='primary' showZero>
+                <Icon className='far fa-eye'></Icon>
+              </Badge>
+            </CardActions>
+          </Card>
         ))
       )}
     </div>

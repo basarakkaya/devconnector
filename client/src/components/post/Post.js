@@ -2,6 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Button } from '@material-ui/core';
 
 import Spinner from '../layout/Spinner';
 import PostItem from '../posts/PostItem';
@@ -24,13 +25,13 @@ const Post = ({
     <Spinner />
   ) : (
     <Fragment>
-      <Link to='/posts' className='btn'>
-        Back To Posts
+      <Link to='/posts'>
+        <Button variant='outlined' color='primary'>
+          Back To Posts
+        </Button>
       </Link>
       <PostItem post={post} />
-
       <CommentForm postId={post._id} />
-
       <div className='comments'>
         {post.comments.map((comment) => (
           <CommentItem key={comment._id} comment={comment} postId={post._id} />

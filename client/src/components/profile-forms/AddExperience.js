@@ -2,9 +2,31 @@ import React, { Fragment, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+  Paper,
+  TextField,
+  Button,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
 import { addExperience } from '../../actions/profile';
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+  submit: {
+    marginTop: 16,
+  },
+}));
+
 const AddExperience = ({ addExperience, history }) => {
+  const classes = useStyles();
+
   const [formData, setFormData] = useState({
     company: '',
     title: '',
@@ -31,84 +53,129 @@ const AddExperience = ({ addExperience, history }) => {
   return (
     <Fragment>
       <h1 className='large text-primary'>Add An Experience</h1>
-      <p className='lead'>
-        <i className='fas fa-code-branch'></i> Add any developer/programming
-        positions that you have had in the past
-      </p>
-      <small>* = required field</small>
-      <form className='form' onSubmit={onSubmit}>
-        <div className='form-group'>
-          <input
+      <Paper className={classes.paper} elevation={3}>
+        <p className='lead'>
+          <i className='fas fa-code-branch'></i> Add any developer/programming
+          positions that you have had in the past
+        </p>
+        <small>* = required field</small>
+        <form onSubmit={onSubmit}>
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='* Job Title'
+            label='Job Title'
             name='title'
             onChange={onChange}
             value={title}
+            fullWidth
             required
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='* Company'
+            label='Company'
             name='company'
             onChange={onChange}
             value={company}
+            fullWidth
             required
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Location'
+            label='Location'
             name='location'
             onChange={onChange}
             value={location}
+            fullWidth
           />
-        </div>
-        <div className='form-group'>
-          <h4>From Date</h4>
-          <input type='date' name='from' onChange={onChange} value={from} />
-        </div>
-        <div className='form-group'>
-          <p>
-            <input
-              type='checkbox'
-              name='current'
-              value={current}
-              onChange={(e) => {
-                setFormData({ ...formData, current: !current });
-                toggleDisabled(!toDateDisabled);
-              }}
-            />{' '}
-            Current Job
-          </p>
-        </div>
-        <div className='form-group'>
-          <h4>To Date</h4>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='date'
+            label='From'
+            name='from'
+            defaultValue={new Date()}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={onChange}
+            value={from}
+            fullWidth
+          />
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  name='current'
+                  checked={current}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      to: '',
+                      current: !current,
+                    });
+                    toggleDisabled(!toDateDisabled);
+                  }}
+                  color='primary'
+                />
+              }
+              label='Current'
+            />
+          </FormGroup>
+          <TextField
+            margin='normal'
+            variant='outlined'
+            type='date'
+            label='To'
             name='to'
+            defaultValue={new Date()}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={onChange}
             value={to}
-            disabled={toDateDisabled ? 'disabled' : ''}
+            disabled={toDateDisabled}
+            fullWidth
           />
-        </div>
-        <div className='form-group'>
-          <textarea
+          <TextField
+            margin='normal'
+            variant='outlined'
             name='description'
-            cols='30'
-            rows='5'
-            placeholder='Job Description'
+            rows={1}
+            rowsMax={3}
+            label='Job Description'
             onChange={onChange}
             value={description}
-          ></textarea>
-        </div>
-        <input type='submit' className='btn btn-primary my-1' />
-        <Link className='btn btn-light my-1' to='/dashboard'>
-          Go Back
-        </Link>
-      </form>
+            multiline
+            fullWidth
+          ></TextField>
+          <Button
+            className={classes.submit}
+            variant='contained'
+            color='primary'
+            type='submit'
+            fullWidth
+          >
+            Submit
+          </Button>
+          <Link to='/dashboard'>
+            <Button
+              className={classes.submit}
+              variant='outlined'
+              color='primary'
+              fullWidth
+            >
+              Go Back
+            </Button>
+          </Link>
+        </form>
+      </Paper>
     </Fragment>
   );
 };

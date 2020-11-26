@@ -24,7 +24,7 @@ _To create GitHub API Credentials, visit [GitHub Developer Settings > OAuth Apps
 ## Future Work
 
 - [x] ~Make DB credentials to be taken from environment variables~ _(completed - Nov 25, 2020)_
-- [ ] Use a UI Component Library to facelift the app
+- [x] ~Use a UI Component Library to facelift the app~ _(completed using Material UI, did not go as I imagined, I did not like the end product - Nov 26, 2020)_
 - [ ] Add `ReCaptcha` to login & register
 - [ ] Send welcome mail
 - [ ] Verify user with mail

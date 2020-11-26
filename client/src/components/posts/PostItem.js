@@ -1,10 +1,28 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
+import {
+  Card,
+  CardHeader,
+  CardActions,
+  CardContent,
+  Avatar,
+  IconButton,
+  Typography,
+  Icon,
+  Badge,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { addLike, removeLike, deletePost } from '../../actions/post';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '8px 0px',
+  },
+}));
 
 const PostItem = ({
   auth,
@@ -14,60 +32,60 @@ const PostItem = ({
   removeLike,
   deletePost,
 }) => {
+  const classes = useStyles();
+
   return (
-    <div className='post bg-white p-1 my-1'>
-      <div>
-        <Link to={`/profile/${user}`}>
-          <img className='round-img' src={avatar} alt='' />
-          <h4>{name}</h4>
-        </Link>
-      </div>
-      <div>
-        <p className='my-1'>{text}</p>
-        <p className='post-date'>
-          Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
-        </p>
-        {showActions && (
-          <Fragment>
-            <button
-              onClick={(e) => addLike(_id)}
-              type='button'
-              className='btn btn-light'
-            >
-              <i className='fas fa-thumbs-up'></i>
-              <span>
-                {' '}
-                {likes.length > 0 && (
-                  <span className='likes-count'>{likes.length}</span>
-                )}
-              </span>
-            </button>
-            <button
-              onClick={(e) => removeLike(_id)}
-              type='button'
-              className='btn btn-light'
-            >
-              <i className='fas fa-thumbs-down'></i>
-            </button>
-            <Link to={`/post/${_id}`} className='btn btn-primary'>
-              Discussion{' '}
-              {comments.length > 0 && (
-                <span className='comment-count'>{comments.length}</span>
-              )}
-            </Link>
-            {!auth.loading && user === auth.user._id && (
-              <button
-                onClick={(e) => deletePost(_id)}
-                type='button'
-                className='btn btn-danger'
-              >
-                <i className='fas fa-times'></i>
-              </button>
-            )}
-          </Fragment>
-        )}
-      </div>
-    </div>
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Link to={`/profile/${user}`}>
+            <Avatar src={avatar} alt='' />
+          </Link>
+        }
+        action={
+          !auth.loading &&
+          user === auth.user._id && (
+            <IconButton aria-label='settings' onClick={(e) => deletePost(_id)}>
+              <Icon color='secondary'>delete</Icon>
+            </IconButton>
+          )
+        }
+        title={
+          <Link to={`/profile/${user}`}>
+            <span>{name}</span>
+          </Link>
+        }
+        subheader={
+          <span>
+            Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
+          </span>
+        }
+      />
+      <CardContent>
+        <Typography variant='body1' color='textPrimary' component='p'>
+          {text}
+        </Typography>
+      </CardContent>
+      {showActions && (
+        <CardActions disableSpacing>
+          <IconButton aria-label='like' onClick={(e) => addLike(_id)}>
+            <Badge badgeContent={likes.length} color='primary'>
+              <Icon>thumb_up</Icon>
+            </Badge>
+          </IconButton>
+          <IconButton aria-label='unlike' onClick={(e) => removeLike(_id)}>
+            <Icon>thumb_down</Icon>
+          </IconButton>
+          <Link to={`/post/${_id}`}>
+            <IconButton aria-label='comments'>
+              <Badge badgeContent={comments.length} color='primary'>
+                <Icon>mode_comment</Icon>
+              </Badge>
+            </IconButton>
+          </Link>
+        </CardActions>
+      )}
+    </Card>
   );
 };
 

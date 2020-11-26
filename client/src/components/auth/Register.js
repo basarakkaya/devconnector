@@ -2,11 +2,24 @@ import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+import { Paper, TextField, Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+  submit: {
+    marginTop: 16,
+  },
+}));
+
 const Register = ({ isAuthenticated, setAlert, register }) => {
+  const classes = useStyles();
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -41,58 +54,73 @@ const Register = ({ isAuthenticated, setAlert, register }) => {
   return (
     <Fragment>
       <h1 className='large text-primary'>Sign Up</h1>
-      <p className='lead'>
-        <i className='fas fa-user'></i> Create Your Account
-      </p>
-      <form className='form' onSubmit={onSubmit}>
-        <div className='form-group'>
-          <input
+      <Paper className={classes.paper} elevation={3}>
+        <p className='lead'>
+          <i className='fas fa-user'></i> Create Your Account
+        </p>
+        <form onSubmit={onSubmit}>
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Name'
+            label='Name'
             name='name'
             value={name}
             onChange={onChange}
+            fullWidth
             required
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='email'
-            placeholder='Email Address'
+            label='Email Address'
             name='email'
             value={email}
             onChange={onChange}
+            helperText='This site uses Gravatar so if you want a profile image, use a
+            Gravatar email'
+            fullWidth
           />
-          <small className='form-text'>
-            This site uses Gravatar so if you want a profile image, use a
-            Gravatar email
-          </small>
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='password'
-            placeholder='Password'
+            label='Password'
             name='password'
             minLength='6'
             value={password}
             onChange={onChange}
+            fullWidth
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='password'
-            placeholder='Confirm Password'
+            label='Confirm Password'
             name='password2'
             minLength='6'
             value={password2}
             onChange={onChange}
+            fullWidth
           />
-        </div>
-        <input type='submit' className='btn btn-primary' value='Register' />
-      </form>
-      <p className='my-1'>
-        Already have an account? <Link to='/login'>Sign In</Link>
-      </p>
+          <Button
+            type='submit'
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            fullWidth
+          >
+            Register
+          </Button>
+        </form>
+        <p className='my-1'>
+          Already have an account?{' '}
+          <Link to='/login'>
+            <Button color='primary'>Sign In</Button>
+          </Link>
+        </p>
+      </Paper>
     </Fragment>
   );
 };

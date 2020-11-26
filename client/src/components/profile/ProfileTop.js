@@ -1,5 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Paper, Icon } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+}));
 
 const ProfileTop = ({
   profile: {
@@ -11,8 +20,10 @@ const ProfileTop = ({
     user: { name, avatar },
   },
 }) => {
+  const classes = useStyles();
+
   return (
-    <div className='profile-top bg-primary p-2'>
+    <Paper className={[classes.paper, 'profile-top p-2']} elevation={3}>
       <img className='round-img my-1' src={avatar} alt='' />
       <h1 className='large'>{name}</h1>
       <p className='lead'>
@@ -22,36 +33,36 @@ const ProfileTop = ({
       <div className='icons my-1'>
         {website && (
           <a href={website} target='_blank' rel='noopener noreferrer'>
-            <i className='fas fa-globe fa-2x'></i>
+            <Icon color='primary' className='fas fa-globe'></Icon>
           </a>
         )}
         {social && social.twitter && (
           <a href={social.twitter} target='_blank' rel='noopener noreferrer'>
-            <i className='fab fa-twitter fa-2x'></i>
+            <Icon color='primary' className='fab fa-twitter'></Icon>
           </a>
         )}
         {social && social.facebook && (
           <a href={social.facebook} target='_blank' rel='noopener noreferrer'>
-            <i className='fab fa-facebook fa-2x'></i>
+            <Icon color='primary' className='fab fa-facebook'></Icon>
           </a>
         )}
         {social && social.linkedin && (
           <a href={social.linkedin} target='_blank' rel='noopener noreferrer'>
-            <i className='fab fa-linkedin fa-2x'></i>
+            <Icon color='primary' className='fab fa-linkedin'></Icon>
           </a>
         )}
         {social && social.youtube && (
           <a href={social.youtube} target='_blank' rel='noopener noreferrer'>
-            <i className='fab fa-youtube fa-2x'></i>
+            <Icon color='primary' className='fab fa-youtube'></Icon>
           </a>
         )}
         {social && social.instagram && (
           <a href={social.instagram} target='_blank' rel='noopener noreferrer'>
-            <i className='fab fa-instagram fa-2x'></i>
+            <Icon color='primary' className='fab fa-instagram'></Icon>
           </a>
         )}
       </div>
-    </div>
+    </Paper>
   );
 };
 

@@ -3,8 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Moment from 'react-moment';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Avatar,
+  IconButton,
+  Typography,
+  Icon,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 import { deleteComment } from '../../actions/post';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    margin: '8px 0px',
+  },
+}));
 
 const CommentItem = ({
   auth,
@@ -12,30 +28,44 @@ const CommentItem = ({
   comment: { _id, text, name, avatar, user, date },
   deleteComment,
 }) => {
+  const classes = useStyles();
+
   return (
-    <div className='post bg-white p-1 my-1'>
-      <div>
-        <Link to={`/profile/${user}`}>
-          <img className='round-img' src={avatar} alt='' />
-          <h4>{name}</h4>
-        </Link>
-      </div>
-      <div>
-        <p className='my-1'>{text}</p>
-        <p className='post-date'>
-          Posted on <Moment format='YYYY/MM/DD'>{date}</Moment>
-        </p>
-        {!auth.loading && user === auth.user._id && (
-          <button
-            onClick={(e) => deleteComment(postId, _id)}
-            type='button'
-            className='btn btn-danger'
-          >
-            <i className='fas fa-times'></i>
-          </button>
-        )}
-      </div>
-    </div>
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Link to={`/profile/${user}`}>
+            <Avatar src={avatar} alt='' />
+          </Link>
+        }
+        action={
+          !auth.loading &&
+          user === auth.user._id && (
+            <IconButton
+              aria-label='settings'
+              onClick={(e) => deleteComment(postId, _id)}
+            >
+              <Icon color='secondary'>delete</Icon>
+            </IconButton>
+          )
+        }
+        title={
+          <Link to={`/profile/${user}`}>
+            <span>{name}</span>
+          </Link>
+        }
+        subheader={
+          <span>
+            Commented on <Moment format='YYYY/MM/DD'>{date}</Moment>
+          </span>
+        }
+      />
+      <CardContent>
+        <Typography variant='body1' color='textPrimary' component='p'>
+          {text}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 

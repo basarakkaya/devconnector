@@ -2,9 +2,30 @@ import React, { Fragment, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+  Paper,
+  TextField,
+  Button,
+  FormGroup,
+  FormControlLabel,
+  Switch,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { addEducation } from '../../actions/profile';
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    padding: 16,
+    margin: '16px 0px',
+  },
+  submit: {
+    marginTop: 16,
+  },
+}));
+
 const AddEducation = ({ addEducation, history }) => {
+  const classes = useStyles();
+
   const [formData, setFormData] = useState({
     school: '',
     degree: '',
@@ -39,84 +60,129 @@ const AddEducation = ({ addEducation, history }) => {
   return (
     <Fragment>
       <h1 className='large text-primary'>Add Your Education</h1>
-      <p className='lead'>
-        <i className='fas fa-graduation-cap'></i> Add any school, bootcamp, etc
-        that you have attended
-      </p>
-      <small>* = required field</small>
-      <form className='form' onSubmit={onSubmit}>
-        <div className='form-group'>
-          <input
+      <Paper className={classes.paper} elevation={3}>
+        <p className='lead'>
+          <i className='fas fa-graduation-cap'></i> Add any school, bootcamp,
+          etc that you have attended
+        </p>
+        <small>* = required field</small>
+        <form onSubmit={onSubmit}>
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='* School or Bootcamp'
+            label='School or Bootcamp'
             name='school'
             onChange={onChange}
             value={school}
+            fullWidth
             required
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='* Degree or Certificate'
+            label='Degree or Certificate'
             name='degree'
             onChange={onChange}
             value={degree}
+            fullWidth
             required
           />
-        </div>
-        <div className='form-group'>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='text'
-            placeholder='Field Of Study'
+            label='Field Of Study'
             name='fieldofstudy'
             onChange={onChange}
             value={fieldofstudy}
+            fullWidth
           />
-        </div>
-        <div className='form-group'>
-          <h4>From Date</h4>
-          <input type='date' name='from' onChange={onChange} value={from} />
-        </div>
-        <div className='form-group'>
-          <p>
-            <input
-              type='checkbox'
-              name='current'
-              value={current}
-              onChange={(e) => {
-                setFormData({ ...formData, current: !current });
-                toggleDisabled(!toDateDisabled);
-              }}
-            />{' '}
-            Current School or Bootcamp
-          </p>
-        </div>
-        <div className='form-group'>
-          <h4>To Date</h4>
-          <input
+          <TextField
+            margin='normal'
+            variant='outlined'
             type='date'
+            label='From'
+            name='from'
+            defaultValue={new Date()}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={onChange}
+            value={from}
+            fullWidth
+          />
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  name='current'
+                  checked={current}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      to: '',
+                      current: !current,
+                    });
+                    toggleDisabled(!toDateDisabled);
+                  }}
+                  color='primary'
+                />
+              }
+              label='Current'
+            />
+          </FormGroup>
+          <TextField
+            margin='normal'
+            variant='outlined'
+            type='date'
+            label='To'
             name='to'
+            defaultValue={new Date()}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
             onChange={onChange}
             value={to}
-            disabled={toDateDisabled ? 'disabled' : ''}
+            disabled={toDateDisabled}
+            fullWidth
           />
-        </div>
-        <div className='form-group'>
-          <textarea
+          <TextField
+            margin='normal'
+            variant='outlined'
             name='description'
-            cols='30'
-            rows='5'
-            placeholder='Program Description'
+            rows={1}
+            rowsMax={3}
+            label='Program Description'
             onChange={onChange}
             value={description}
-          ></textarea>
-        </div>
-        <input type='submit' className='btn btn-primary my-1' />
-        <Link className='btn btn-light my-1' to='/dashboard'>
-          Go Back
-        </Link>
-      </form>
+            multiline
+            fullWidth
+          />
+          <Button
+            type='submit'
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            fullWidth
+          >
+            Submit
+          </Button>
+          <Link to='/dashboard'>
+            <Button
+              variant='outlined'
+              color='primary'
+              className={classes.submit}
+              fullWidth
+            >
+              Go Back
+            </Button>
+          </Link>
+        </form>
+      </Paper>
     </Fragment>
   );
 };
